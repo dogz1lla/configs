@@ -67,10 +67,31 @@
 	:init
 	(setq hl-todo-keyword-faces
 		'(("TODO" . "#FDFE02")
-		  ("NOTE" . "#0BFF01"))
+		  ("NOTE" . "#0BFF01")
+		  ("CRITICAL" . "FF0000"))
 	)
 	:config
 	(global-hl-todo-mode 1)
+)
+
+;; add an option of quitting insert mode with "jk"
+(use-package evil-escape
+	:ensure t
+	:init
+	(setq-default evil-escape-key-sequence "jk") 
+	:config
+	(evil-escape-mode 1)
+)
+
+;; Smart mode-line
+(use-package smart-mode-line
+	:ensure t
+	:init
+	(setq sml/no-confirm-load-theme t)
+	(setq sml/theme 'dark)
+	(setq rm-blacklist (list "jk" " WK" " Undo-Tree" " ElDoc" " Fill"))
+	:config
+	(sml/setup)
 )
 
 ;; /* -----------------------------------------------------------
@@ -88,7 +109,10 @@
 		"SPC" '(helm-M-x :which-key "M-x")
 		"pf" '(helm-find-files :which-key "find files")
 		;; buffers
-		"bb" '(helm-buffers-list :which-key "buffer list")
+		"." '(helm-mini :which-key "buffers and recentf")
+		"bs" '(save-buffer :which-key "buffer save")
+		"bl" '(evil-switch-to-windows-last-buffer :which-key "buffer last")
+		"bk" '(kill-this-buffer :which-key "buffer kill")
 		;; Window
 		"wl" '(windmove-right :which-key "move right")
 		"wh" '(windmove-left :which-key "move left")
@@ -98,6 +122,7 @@
 		"ws" '(split-window-below :which-key "split bottom")
 		"wc" '(delete-window :which-key "delete window")
 		;; Others
+		"fr" '(recentf-open-files :which-key "recent files")
 		"at" '(ansi-term :which-key "open terminal")
 	)
 )
@@ -119,6 +144,24 @@
 ;; Hook auto fill mode to the prog-mode
 (add-hook 'prog-mode-hook 'auto-fill-mode)
 
+;; Disable backup files
+(setq make-backup-files nil)
+
+;; Highlight current line
+(global-hl-line-mode 1)
+
+;; Display column number
+(column-number-mode 1)
+
+;; Display relative line numbers
+(global-display-line-numbers-mode 1)
+(setq display-line-numbers-width-start 1)
+(setq display-line-numbers-type 'relative)
+
+;; Disable spash screen
+(setq inhibit-startup-message t)
+(setq initial-scratch-message nil)
+
 ;; /* -----------------------------------------------------------
 ;; |======================= Appearance ==========================
 ;; `-------------------------------------------------------------
@@ -129,10 +172,6 @@
 (tooltip-mode -1)
 (menu-bar-mode -1)
 (blink-cursor-mode -1)
-
-;; Disable spash screen
-(setq inhibit-startup-message t)
-(setq initial-scratch-message nil)
 
 ;; Theme
 (use-package doom-themes
@@ -149,4 +188,3 @@
 (add-to-list 'default-frame-alist '(ns-appearance . dark))
 (setq ns-use-proxy-icon nil)
 (setq frame-title-format nil)
-
