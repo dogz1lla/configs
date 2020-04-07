@@ -1,3 +1,27 @@
+;; ============================ ;;
+;;       ___           ___      ;;
+;;      /  /\         /  /\     ;; **DESCRIPTION:**
+;;     /  /:/_       /  /::|    ;; emacs config
+;;    /  /:/ /\     /  /:/:|    ;; 
+;;   /  /:/_/::\   /  /:/|:|__  ;; **AUTHOR:**
+;;  /__/:/__\/\:\ /__/:/ |:| /\ ;; dogz1lla
+;;  \  \:\ /~~/:/ \__\/  |:|/:/ ;; https://github.com/dogz1lla
+;;   \  \:\  /:/      |  |:/:/  ;; 
+;;    \  \:\/:/       |  |::/   ;; **DATE:**
+;;     \  \::/        |  |:/    ;; 2020/04/05
+;;      \__\/         |__|/     ;;
+;; ============================ ;;
+;;
+;; Some related links:
+;; * Exhaustive helm tutorial:
+;;   http://tuhdo.github.io/helm-intro.html
+;; * Org-agenda workflow example:
+;;   http://cachestocaches.com/2016/9/my-workflow-org-agenda/
+;; * Org-agenda view tweaking:
+;;   https://blog.aaronbieber.com/2016/09/24/an-agenda-for-life-with-org-mode.html
+;; * Org-mode quick guide:
+;;   https://orgmode.org/guide/index.html
+
 ;; /* -----------------------------------------------------------
 ;; |========================= Packages ==========================
 ;; `-------------------------------------------------------------
@@ -68,7 +92,7 @@
 	(setq hl-todo-keyword-faces
 		'(("TODO" . "#FDFE02")
 		  ("NOTE" . "#0BFF01")
-		  ("CRITICAL" . "FF0000"))
+		  ("CRITICAL" . "#FF0000"))
 	)
 	:config
 	(global-hl-todo-mode 1)
@@ -94,6 +118,48 @@
 	(sml/setup)
 )
 
+;; org-mode <3
+(use-package org
+  :init
+  (add-hook 'org-mode-hook 'visual-line-mode)
+  (add-hook 'org-mode-hook 'org-indent-mode)
+  (add-hook 'org-mode-hook 'flyspell-mode)
+  (setq org-agenda-files '("~/code/org/"))
+  (setq org-todo-keywords
+	'((sequence "TODO(t)"
+		    "NEXT(n)"
+		    "WAITING(w@)"
+		    "INACTIVE(i)"
+		    "MEETING(m@)" | "DONE(d!)"
+		                    "CANCELLED(c@)")))
+  (setq org-tag-alist '(("@WORK" . ?w)
+			("@HOME" . ?h)
+			("HEALTH")
+			("CODE")
+			("FUN")))
+  (setq org-return-follows-link t)
+  :defer t
+  :config
+  (require 'org)
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((python . t)
+   ))
+  (setq org-src-fontify-natively t)
+  (setq org-default-notes-file "~/code/org/todo.org")
+  (setq org-capture-templates
+	'(("t" "todo" entry (file org-default-notes-file)
+	   "* TODO %?\n%u\n%a\n" :clock-in t :clock-resume t)
+	  ("m" "Meeting" entry (file org-default-notes-file)
+	   "* MEETING with %? :MEETING:\n%t" :clock-in t :clock-resume t)
+	  ("d" "Diary" entry (file+datetree "~/code/org/diary.org")
+	   "* %?\n%U\n" :clock-in t :clock-resume t)
+	  ("i" "Idea" entry (file "~/code/org/idea.org")
+	   "* %? :IDEA: \n%t" :clock-in t :clock-resume t)
+	  ("n" "Next Task" entry (file+headline org-default-notes-file "Tasks")
+	   "** NEXT %? \nDEADLINE: %t") )) 
+  )
+
 ;; /* -----------------------------------------------------------
 ;; |========================= Keybinds ==========================
 ;; `-------------------------------------------------------------
@@ -105,14 +171,15 @@
 		:states '(normal visual insert emacs)
 		:prefix "SPC"
 		:non-normal-prefix "M-SPC"
-		"TAB" '(switch-to-prev-buffer :which-key "previous buffer")
-		"SPC" '(helm-M-x :which-key "M-x")
-		"pf" '(helm-find-files :which-key "find files")
+		"." '(helm-M-x :which-key "M-x")
+		"ff" '(helm-find-files :which-key "find files")
 		;; buffers
-		"." '(helm-mini :which-key "buffers and recentf")
+		"TAB" '(switch-to-prev-buffer :which-key "previous buffer")
+		"SPC" '(helm-mini :which-key "buffers and recentf")
 		"bs" '(save-buffer :which-key "buffer save")
 		"bl" '(evil-switch-to-windows-last-buffer :which-key "buffer last")
 		"bk" '(kill-this-buffer :which-key "buffer kill")
+		"RET" '(helm-bookmarks :which-key "bookmarks")
 		;; Window
 		"wl" '(windmove-right :which-key "move right")
 		"wh" '(windmove-left :which-key "move left")
@@ -122,9 +189,34 @@
 		"ws" '(split-window-below :which-key "split bottom")
 		"wc" '(delete-window :which-key "delete window")
 		;; Others
-		"fr" '(recentf-open-files :which-key "recent files")
-		"at" '(ansi-term :which-key "open terminal")
-	)
+		"at" '(shell :which-key "open shell")
+		"oa" '(org-agenda :which-key "org agenda")
+		"oc" '(org-capture :which-key "org capture")
+		)
+	        (general-define-key
+		 :keymaps 'helm-map
+		 "C-j" 'helm-next-line
+		 "C-k" 'helm-previous-line
+		 )
+		;; org mode keybinds
+	        (general-define-key
+		 :keymaps 'org-mode-map
+		 :states '(normal emacs)
+		 :prefix "SPC"
+		 :non-normal-prefix "M-SPC"
+		 "sl" '(org-schedule :which-key "scheduled task")
+		 "dl" '(org-deadline :which-key "deadline task")
+		 "ci" '(org-clock-in :which-key "clock in")
+		 "co" '(org-clock-out :which-key "clock out")
+		 )
+		;; org agenda keybinds
+	        (general-define-key
+		 :keymaps 'org-agenda-mode-map
+		 "l" 'org-agenda-later
+		 "h" 'org-agenda-earlier
+		 "j" 'org-agenda-next-line
+		 "k" 'org-agenda-previous-line
+		 )
 )
 
 ;; /* -----------------------------------------------------------
@@ -156,11 +248,15 @@
 ;; Display relative line numbers
 (global-display-line-numbers-mode 1)
 (setq display-line-numbers-width-start 1)
+(setq display-line-numbers-width 3)
 (setq display-line-numbers-type 'relative)
 
 ;; Disable spash screen
 (setq inhibit-startup-message t)
 (setq initial-scratch-message nil)
+
+;; Highlight matching parenthesis
+(show-paren-mode 1)
 
 ;; /* -----------------------------------------------------------
 ;; |======================= Appearance ==========================
