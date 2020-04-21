@@ -116,6 +116,7 @@
 	(setq rm-blacklist (list "jk" " WK" " Undo-Tree" " ElDoc" " Fill"))
 	:config
 	(sml/setup)
+	(add-to-list 'sml/replacer-regexp-list '("^~/code/bluanalytics/" ":WORK:") t)
 )
 
 ;; org-mode <3
@@ -123,21 +124,14 @@
   :init
   (add-hook 'org-mode-hook 'visual-line-mode)
   (add-hook 'org-mode-hook 'org-indent-mode)
-  (add-hook 'org-mode-hook 'flyspell-mode)
   (setq org-agenda-files '("~/code/org/"))
   (setq org-todo-keywords
-	'((sequence "TODO(t)"
-		    "NEXT(n)"
-		    "WAITING(w@)"
-		    "INACTIVE(i)"
-		    "MEETING(m@)" | "DONE(d!)"
-		                    "CANCELLED(c@)")))
+	'((sequence "TODO(t)" "NEXT(n)" "WAITING(w)" "INACTIVE(i)" "MEETING(m)" "|" "CANCELLED(c)" "DONE(d!)")))
   (setq org-tag-alist '(("@WORK" . ?w)
-			("@HOME" . ?h)
-			("HEALTH")
-			("CODE")
-			("FUN")))
-  (setq org-return-follows-link t)
+			("@HOME" . ?h)))
+  (setq org-refile-targets (quote ((nil :maxlevel . 9)
+                                 (org-agenda-files :maxlevel . 9))))
+  (setq org-capture-bookmark nil)
   :defer t
   :config
   (require 'org)
@@ -149,7 +143,7 @@
   (setq org-default-notes-file "~/code/org/todo.org")
   (setq org-capture-templates
 	'(("t" "todo" entry (file org-default-notes-file)
-	   "* TODO %?\n%u\n%a\n" :clock-in t :clock-resume t)
+	   "* TODO %? \n %u \n %a \n" :clock-in t :clock-resume t)
 	  ("m" "Meeting" entry (file org-default-notes-file)
 	   "* MEETING with %? :MEETING:\n%t" :clock-in t :clock-resume t)
 	  ("d" "Diary" entry (file+datetree "~/code/org/diary.org")
@@ -159,6 +153,12 @@
 	  ("n" "Next Task" entry (file+headline org-default-notes-file "Tasks")
 	   "** NEXT %? \nDEADLINE: %t") )) 
   )
+
+;; Fancy bullets in org
+(use-package org-bullets
+  :ensure t
+  :config
+  (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
 
 ;; /* -----------------------------------------------------------
 ;; |========================= Keybinds ==========================
@@ -284,3 +284,17 @@
 (add-to-list 'default-frame-alist '(ns-appearance . dark))
 (setq ns-use-proxy-icon nil)
 (setq frame-title-format nil)
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages
+   (quote
+    (org-bullets which-key use-package telephone-line smart-mode-line pyenv-mode hl-todo helm general evil-surround evil-escape doom-themes))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
