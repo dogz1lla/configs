@@ -160,6 +160,26 @@
   :config
   (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
 
+;; Autocompletion with company
+(use-package company
+  :ensure t
+  :init
+  (add-hook 'after-init-hook 'global-company-mode))
+
+;; Clojure-mode 
+(unless (package-installed-p 'clojure-mode)
+  (package-install 'clojure-mode))
+
+;; Cider
+(unless (package-installed-p 'cider)
+  (package-install 'cider))
+
+;; Slime
+(load (expand-file-name "~/.quicklisp/slime-helper.el"))
+  ;; Replace "sbcl" with the path to your implementation
+  (setq inferior-lisp-program "sbcl")
+
+
 ;; /* -----------------------------------------------------------
 ;; |========================= Keybinds ==========================
 ;; `-------------------------------------------------------------
@@ -258,6 +278,16 @@
 ;; Highlight matching parenthesis
 (show-paren-mode 1)
 
+;; Add colors to the shell
+(add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
+(add-to-list 'comint-output-filter-functions 'ansi-color-process-output)
+(add-hook 'shell-mode-hook
+      (lambda ()
+        (face-remap-set-base 'comint-highlight-prompt :inherit nil)))
+
+;; Persistent sessions
+(desktop-save-mode 1)
+
 ;; /* -----------------------------------------------------------
 ;; |======================= Appearance ==========================
 ;; `-------------------------------------------------------------
@@ -291,7 +321,7 @@
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (org-bullets which-key use-package telephone-line smart-mode-line pyenv-mode hl-todo helm general evil-surround evil-escape doom-themes))))
+    (company-mode org-bullets which-key use-package telephone-line smart-mode-line pyenv-mode hl-todo helm general evil-surround evil-escape doom-themes))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
