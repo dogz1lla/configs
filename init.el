@@ -116,7 +116,7 @@
 	(setq rm-blacklist (list "jk" " WK" " Undo-Tree" " ElDoc" " Fill"))
 	:config
 	(sml/setup)
-	(add-to-list 'sml/replacer-regexp-list '("^~/code/bluanalytics/" ":WORK:") t)
+	(add-to-list 'sml/replacer-regexp-list '("^~/code/" ":WORK:") t)
 )
 
 ;; org-mode <3
