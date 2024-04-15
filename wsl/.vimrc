@@ -48,3 +48,8 @@ nnoremap <leader>sf :source %<CR>
 vnoremap <C-c> "+y
 vnoremap <C-v> "+p
 nnoremap <C-j> 0ko<Esc>S<Esc>j0
+
+" corrects colors in vim, see
+" https://www.reddit.com/r/neovim/comments/st3ypk/comment/hxhez46/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1&utm_content=share_button
+set background=dark
+set t_Co=256
