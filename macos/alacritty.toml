@@ -1,0 +1,19 @@
+# https://www.joshmedeski.com/posts/setting-up-alacritty-for-a-fast-minimal-terminal-emulator/
+import = ["~/.config/alacritty/catppuccin/catppuccin-mocha.toml"]
+
+live_config_reload = true
+
+[env]
+TERM = "xterm-256color"
+
+[window]
+decorations = "buttonless"
+dynamic_padding = false
+opacity = 0.9
+
+[window.padding]
+x = 10
+y = 15
+
+[font]
+size = 13
