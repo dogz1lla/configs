@@ -924,3 +924,19 @@ vim.o.tabstop = 4
 --vim.lsp.set_log_level 'debug'
 vim.opt.colorcolumn = '100'
 vim.cmd [[highlight ColorColumn ctermbg=0 guibg=grey1]]
+
+-- disable warning msgs in conjure log buffer
+-- see https://www.linkedin.com/pulse/taming-conjures-output-buffer-evgheni-kondratenko-fooef/
+vim.api.nvim_create_autocmd('DiagnosticChanged', {
+  pattern = {"conjure-log-*"},
+  callback = function(args)
+    local diagnostics = args.data.diagnostics
+
+    if (diagnostics[1] ~= nil) then
+      local bufnr = diagnostics[1]["bufnr"]
+      local namespace = diagnostics[1]["namespace"]
+      vim.diagnostic.disable(bufnr)
+      vim.diagnostic.reset(namespace, bufnr)
+    end
+  end,
+})
