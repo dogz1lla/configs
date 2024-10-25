@@ -1,19 +1,30 @@
+# disable top bar
 show-title-bar false
 #include /usr/share/doc/newsboat/contrib/colorschemes/nord
 
+# colorscheme
+# # bg and list items
 color background white color234 
 color listnormal color255 color234
 color listfocus color166 color235
-
+# # focused list items
 color listnormal_unread color105 color234
 color listfocus_unread color166 color235
+# # article view
 color article color250 color234
-
+# # bottom bar
 color info color203 color232
 color hint-key color245 color232 bold
 color hint-separator color245 color232
 color hint-description color245 color232
 color hint-keys-delimiter color209 color232
+
+# adding some color to the article text
+highlight article "Feed:.*" color51 color234
+highlight article "Title:.*" color87 color234
+highlight article "Author:.*" color123 color234
+highlight article "Date:.*" color159 color234
+highlight article "Link:.*" color195 color234
 
 # TODO: check if mpv produces all the warnings when on proper hardware,
 # ie remove the --really-quiet --no-terminal options to mpv, see the command below
