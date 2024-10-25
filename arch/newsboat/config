@@ -14,3 +14,8 @@ color hint-key color245 color232 bold
 color hint-separator color245 color232
 color hint-description color245 color232
 color hint-keys-delimiter color209 color232
+
+# TODO: check if mpv produces all the warnings when on proper hardware,
+# ie remove the --really-quiet --no-terminal options to mpv, see the command below
+#macro v set browser "setsid -f mpv %u" ; open-in-browser; set browser "lynx %u" -- "play youtube link in mpv"
+macro v set browser "setsid -f mpv --really-quiet --no-terminal" ; open-in-browser; set browser "lynx %u" -- "play youtube link in mpv"
